@@ -1,5 +1,6 @@
 from flask import jsonify, Blueprint, request
 import requests
+import re
 from app.models.candidate import Candidate
 from app.models.city import City
 from app.models.tecnology import Tecnology
@@ -19,11 +20,12 @@ def populate_database():
     unique_cities = []
     unique_technologies = []
     for count, item in enumerate(response_geek_json):
-
+        experience = reformule_experience(item['experience'])
         candidate = Candidate(
             id=item['id'],
-            experience=item['experience'],
             name=response_user_json[count]['name']['first'],
+            minimum_experience_time=experience['minimum'],
+            maximum_experience_time=experience['maximum'],
             photo_url=response_user_json[count]['picture']['large'],
             accept_remote=accept_remote(count)
         )
@@ -84,3 +86,15 @@ def accept_remote(number):
         return False
     else:
         return True
+
+def reformule_experience(experience):
+  new_experience = {}
+  for x in experience:
+    if x == '+':      
+      new_experience["minimum"] = int(experience.replace('+ years',''))
+      new_experience["maximum"] = int(experience.replace('+ years',''))+1
+    elif x == "-":
+      new_experience["minimum"] = int(re.sub(r"(-.+)","",experience))
+      correct_experience = re.sub(r"(.+-)","",experience)
+      new_experience["maximum"] = int(correct_experience.replace(" years", ""))
+  return new_experience
