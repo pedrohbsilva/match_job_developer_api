@@ -17,7 +17,7 @@ def create_app():
 
   app.config.from_object(app_config[os.getenv('FLASK_ENV')])
   db.init_app(app)
-  cors.init_app(app, resources={r"*": {"origins": "*"}})
+  cors.init_app(app, resources={r"*": {"origins": ["https://quizzical-engelbart-189acb.netlify.app/","http://localhost:3000"]}})
   ma.init_app(ma)
   api = Api(app)
   manager = Manager(app)

@@ -11,6 +11,11 @@ db_blueprint = Blueprint('db_blueprint', __name__,  url_prefix="/data")
 
 @db_blueprint.route('/', methods=['GET'])
 def populate_database():
+    """[summary]
+        Endpoint to populate the database receiving json from Geek and RandomUser
+    Returns:
+        [json]: [return a json of geek]
+    """    
     
     fake_data_user = requests.get("https://randomuser.me/api/?nat=br&results=100", timeout=10)
     fake_data_geek = requests.get("https://geekhunter-recruiting.s3.amazonaws.com/code_challenge.json", timeout=10)
@@ -66,6 +71,15 @@ def populate_database():
     return jsonify(fake_data_geek.json())
 
 def get_id(list_search, name):
+    """[summary]
+        Function to get the technology specific id.
+    Args:
+        list_search ([list]): [a list with technology data.]
+        name ([string]): [technology name]
+
+    Returns:
+        [integer]: [return number id of technology]
+    """    
     id_type = 0
     for item in list_search:
         if item.name == name:
@@ -73,6 +87,15 @@ def get_id(list_search, name):
     return id_type
 
 def main_tech(list_search, name):
+    """[summary]
+        Function to get the technology specific main_tech.
+    Args:
+       list_search ([list]): [a list with technology data.]
+        name ([string]): [technology name]
+
+    Returns:
+        [boolean]: [return boolean main_tech]
+    """    
     main_tech_boolean = False
     for item in list_search:
         if item['name'] == name:
@@ -80,12 +103,27 @@ def main_tech(list_search, name):
     return main_tech_boolean
 
 def accept_remote(number):
+    """[summary]
+        logical function to check if it is odd or even and return boolean from this.
+    Args:
+        number ([integer]): [number received]
+
+    Returns:
+        [boolean]: [Return a boolean]
+    """    
     if (number % 2) == 0:
         return False
     else:
         return True
 
 def reformule_experience(experience):
+    """[summary]
+        function to separate the experience string into a minimum and maximum dict
+    Args:
+        experience ([string]): [string experience]
+    Returns:
+        [dict]: [return a dict minimum and maximum experience of candidate]
+    """    
   new_experience = {}
   for x in experience:
     if x == '+':      

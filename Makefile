@@ -25,8 +25,12 @@ heroku_create:
 heroku_login: 
 	heroku container:login 
 
-heroku_postgres:
+heroku_postgres_create:
 	heroku addons:create heroku-postgresql:hobby-dev --app lit-citadel-12163
+
+heroku_postgres_remove:
+	heroku addons:remove heroku-postgresql:hobby-dev --app lit-citadel-12163
+
 
 heroku_registry:
 	docker build -f Dockerfile.prod -t registry.heroku.com/lit-citadel-12163/web .
