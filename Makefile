@@ -1,3 +1,24 @@
+run-app:
+	docker-compose up --build
+
+run-db:
+	docker-compose -f docker-compose-db.yml up --build  
+
+run-debug:
+	docker-compose build && docker-compose run --service-ports app
+
+run-stop:
+	docker-compose down 
+
+run-prune:
+	docker-compose -f docker-compose-db.yml down && docker-compose down
+
+createdb:
+	docker-compose exec app python manage.py recreate_db
+
+populatedb:
+	docker-compose exec app python manage.py populate_db
+
 heroku_create:
 	heroku create
 

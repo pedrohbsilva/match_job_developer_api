@@ -1,29 +1,14 @@
 version: '3'
 
 services:
-  postgresql:
-    build:
-      context: ./app/db
-      dockerfile: Dockerfile
-    ports:
-      - "5433:5432"
-    expose:
-      - 5432
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-  app: 
-    depends_on:
-    - postgresql
-    container_name: api
+  app:
     build: . #
+    container_name: api
     ports:
-      - "5000:5000" 
+      - '5000:5000'
     environment:
       - FLASK_APP=manage.py
       - FLASK_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@postgresql:5432/match_job_developer_dev
     volumes:
       - .:/usr/app
-
-      

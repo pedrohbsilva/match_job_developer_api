@@ -1,13 +1,13 @@
 from flask import jsonify, Blueprint
-from app.models.tecnology import Tecnology, tecnologies_share_schema
+from app.models.technology import Technology, technologies_share_schema
 from app import db
 
-TECNOLOGY = Blueprint('TECNOLOGY', __name__,  url_prefix="/technologies")
+TECHNOLOGY = Blueprint('TECHNOLOGY', __name__,  url_prefix="/technologies")
 
-@TECNOLOGY.route('/get_all_technologies', methods=['GET'])
+@TECHNOLOGY.route('/get_all_technologies', methods=['GET'])
 def get_all_technologies():
-  technologies_query = Tecnology.query.order_by(Tecnology.name).all()
-  technologies = tecnologies_share_schema.dump(technologies_query)
+  technologies_query = Technology.query.order_by(Technology.name).all()
+  technologies = technologies_share_schema.dump(technologies_query)
   
   return jsonify(technologies), 200
   

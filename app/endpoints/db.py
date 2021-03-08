@@ -3,10 +3,10 @@ import requests
 import re
 from app.models.candidate import Candidate
 from app.models.city import City
-from app.models.tecnology import Tecnology
-from app.models.candidates_in_city import CandidatesInCity
-from app.models.candidate_tecnology import CandidateTecnology
+from app.models.technology import Technology
+from app.models.candidate_technology import CandidateTechnology
 from app import db
+
 db_blueprint = Blueprint('db_blueprint', __name__,  url_prefix="/data")
 
 @db_blueprint.route('/', methods=['GET'])
@@ -21,50 +21,48 @@ def populate_database():
     unique_technologies = []
     for count, item in enumerate(response_geek_json):
         experience = reformule_experience(item['experience'])
+        data_city = item['city']
+        if data_city not in unique_cities:
+            unique_cities.append(data_city)
+            city = City(
+                        name=data_city
+                    )
+            db.session.add(city)
+        
+        city_id = City.query.filter(City.name==data_city).first().id
         candidate = Candidate(
             id=item['id'],
             name=response_user_json[count]['name']['first'],
+            city_id=city_id,
             minimum_experience_time=experience['minimum'],
             maximum_experience_time=experience['maximum'],
             photo_url=response_user_json[count]['picture']['large'],
             accept_remote=accept_remote(count)
         )
-        if item['city'] not in unique_cities:
-            unique_cities.append(item['city'])
-            city = City(
-                        name=item['city']
-                    )
-            db.session.add(city)
         for tech in item['technologies']:
             if tech['name'] not in unique_technologies:
                 unique_technologies.append(tech['name'])
-                technology = Tecnology(
+                technology = Technology(
                             name=tech['name']
                         )
                 db.session.add(technology)
         db.session.add(candidate)
+
     db.session.commit()
     
     data_candidates = Candidate.query.all()
-    data_cities = City.query.all()
-    data_technologies = Tecnology.query.all()
+    data_technologies = Technology.query.all()
 
     for count, item in enumerate(data_candidates):
         if item.id == response_geek_json[count]['id']:
-            candidates_in_city = CandidatesInCity(
-                candidate_id=item.id,
-                city_id=get_id(data_cities, response_geek_json[count]['city'])
-            )
             for tech in response_geek_json[count]['technologies']:
-                candidates_technologies = CandidateTecnology(
+                candidates_technologies = CandidateTechnology(
                     candidate_id=item.id,
-                    tecnology_id=get_id(data_technologies, tech['name']),
+                    technology_id=get_id(data_technologies, tech['name']),
                     is_main_tech=main_tech(response_geek_json[count]['technologies'], tech['name'])
                 )
                 db.session.add(candidates_technologies)
-            db.session.add(candidates_in_city)
     db.session.commit()
-
     return jsonify(fake_data_geek.json())
 
 def get_id(list_search, name):
