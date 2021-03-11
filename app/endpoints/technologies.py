@@ -11,8 +11,8 @@ def get_all_technologies():
   Returns:
       [json]: [Returns a json with all technologies.]
   """  
-  technologies_query = Technology.query.order_by(Technology.name).all()
-  technologies = technologies_share_schema.dump(technologies_query)
-  
-  return jsonify(technologies), 200
+    technologies_query = Technology.query.order_by(Technology.name).all()
+    technologies = technologies_share_schema.dump(technologies_query)
+    
+    return jsonify(technologies), 200
   

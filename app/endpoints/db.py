@@ -124,13 +124,13 @@ def reformule_experience(experience):
     Returns:
         [dict]: [return a dict minimum and maximum experience of candidate]
     """    
-  new_experience = {}
-  for x in experience:
-    if x == '+':      
-      new_experience["minimum"] = int(experience.replace('+ years',''))
-      new_experience["maximum"] = int(experience.replace('+ years',''))+1
-    elif x == "-":
-      new_experience["minimum"] = int(re.sub(r"(-.+)","",experience))
-      correct_experience = re.sub(r"(.+-)","",experience)
-      new_experience["maximum"] = int(correct_experience.replace(" years", ""))
-  return new_experience
+    new_experience = {}
+    for x in experience:
+        if x == '+':      
+            new_experience["minimum"] = int(experience.replace('+ years',''))
+            new_experience["maximum"] = int(experience.replace('+ years',''))+1
+        elif x == "-":
+            new_experience["minimum"] = int(re.sub(r"(-.+)","",experience))
+            correct_experience = re.sub(r"(.+-)","",experience)
+            new_experience["maximum"] = int(correct_experience.replace(" years", ""))
+    return new_experience
