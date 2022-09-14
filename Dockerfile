@@ -13,4 +13,4 @@ RUN pip3 install -r requirements.txt
 # RUN adduser --disabled-password myuser
 # USER myuser
 
-CMD gunicorn --bind 0.0.0.0:$PORT app
+CMD gunicorn --bind 0.0.0.0:$PORT app:app
