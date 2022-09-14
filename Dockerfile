@@ -9,4 +9,8 @@ COPY . .
 
 RUN pip3 install -r requirements.txt 
 
-CMD flask run
+# adicionar usuário que não é root
+RUN adduser --disabled-password myuser
+USER myuser
+
+CMD gunicorn --bind 0.0.0.0:$PORT manage:app
